@@ -57,9 +57,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifact
-          
+
       - name: Move artifact to ./build
-        run: mv /home/runner/work/assessmentcicd-/assessmentcicd-/* ./build
+        run: mkdir -p ./build && mv /home/runner/work/assessmentcicd-/assessmentcicd-/* ./build
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
