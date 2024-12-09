@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   pull_request:
@@ -35,3 +35,47 @@ jobs:
 
       - name: Build application
         run: npm run build
+      
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: ./build
+  
+  cd:
+    name: cd
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: ./build
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.6
+
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve -var="env=${{ github.base_ref || github.ref_name }}"
+        working-directory: ./terraform
+
+      - name: Upload build to S3
+        run: aws s3 sync ./build s3://${{ github.base_ref || github.ref_name }}-application-bucket --delete
+  
+      - name: Destroy resources on failure
+        if: failure()
+        run: terraform destroy -auto-approve -var="env=${{ github.base_ref || github.ref_name }}"
+        working-directory: ./terraform
