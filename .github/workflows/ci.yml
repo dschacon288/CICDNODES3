@@ -57,6 +57,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifact
+          
+      - name: Move artifact to ./build
+        run: mv /home/runner/work/assessmentcicd-/assessmentcicd-/* ./build
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -72,7 +75,7 @@ jobs:
         working-directory: ./terraform
 
       - name: Upload build to S3
-        run: aws s3 sync ./build s3://${{ github.ref_name }}-application-bucket --delete
+        run: aws s3 sync ./build s3://${{ github.base_ref || github.ref_name }}-application-bucket --delete
   
       - name: Destroy resources on failure
         if: failure()
