@@ -44,7 +44,7 @@ class IPv4 {
     }
     this.fullAddress = parseInt(
       this.getBinnary().replace(/\./g, "").padStart(32, "0"),
-      2
+      2,
     );
     return this.fullAddress;
   }
@@ -53,7 +53,7 @@ class IPv4 {
     const fullAddress = this.getFullAddress();
     const netmask = parseInt(
       ((1 << (32 - this.mask)) >>> 0).toString(2).padStart(32, "1"),
-      2
+      2,
     );
     const networkAddress = ((fullAddress & netmask) >>> 0)
       .toString(2)
@@ -70,7 +70,7 @@ class IPv4 {
     const fullAddress = this.getFullAddress();
     const netmask = parseInt(
       ((1 << (32 - this.mask)) >>> 0).toString(2).padStart(32, "1"),
-      2
+      2,
     );
     const firstAddress = (((fullAddress & netmask) + 1 + reserved) >>> 0)
       .toString(2)
@@ -87,7 +87,7 @@ class IPv4 {
     const fullAddress = this.getFullAddress();
     const netmask = parseInt(
       (1 << (32 - this.mask)).toString(2).padStart(32, "1"),
-      2
+      2,
     );
     const broadcast = ~(netmask >>> 0);
     const lastAddress = (((fullAddress | broadcast) >>> 0) - 1)
@@ -105,7 +105,7 @@ class IPv4 {
     const fullAddress = this.getFullAddress();
     const netmask = parseInt(
       (1 << (32 - this.mask)).toString(2).padStart(32, "1"),
-      2
+      2,
     );
     const broadcast = ~(netmask >>> 0);
     const broadcastAddress = ((fullAddress | broadcast) >>> 0)
@@ -122,7 +122,7 @@ class IPv4 {
   netmask() {
     const netmask = parseInt(
       (1 << (32 - this.mask)).toString(2).padStart(32, "1"),
-      2
+      2,
     );
     const netmaskOctets = netmask
       .toString(2)
@@ -165,7 +165,7 @@ class IPv4 {
       (parseInt("1".repeat(len), 2) << (32 - this.mask - len)) >>> 0; // e.g. 111 if we have number be 8
     const netmask = parseInt(
       (1 << (32 - this.mask)).toString(2).padStart(32, "1"),
-      2
+      2,
     ); // the current netmask in binary
     const newNetmask = this.mask + len;
     let maxNetmask = (netmask | additionalMask) >>> 0;
