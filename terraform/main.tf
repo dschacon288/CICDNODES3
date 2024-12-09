@@ -48,4 +48,8 @@ resource "aws_s3_bucket_policy" "app_bucket_policy" {
     ]
   }
   POLICY
+
+  depends_on = [
+    aws_s3_bucket_public_access_block.public_access_block
+  ]
 }
