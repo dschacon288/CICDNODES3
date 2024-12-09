@@ -1,4 +1,5 @@
 node_modules
+build/
 # Terraform state files
 terraform/.terraform/
 terraform/.terraform.lock.hcl
