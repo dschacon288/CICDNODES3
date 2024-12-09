@@ -1,5 +1,6 @@
 class IPv4 {
   //Cambio para ejecutar ci
+  //test
   constructor(address, mask) {
     this.address = address;
     this.mask = parseInt(mask);
